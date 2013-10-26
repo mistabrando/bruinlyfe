@@ -127,4 +127,35 @@ def rende(url):
 				mealdata.append({ "title" : "Beverages"})
 			if item.get_text():
 				mealdata.append(item.get_text())
+	truemealdata = sortrende(mealdata)
+	return truemealdata
+
+def sortrende(rendedata):
+	mealdata = {}
+	onBreakfast = True;
+	onLunch = False;
+	onDinner = False;
+	breakfast = []
+	lunch = []
+	dinner = []
+	for item in rendedata:
+		try:
+			item['title']
+		except TypeError:
+			pass
+		else:
+			if(item['title'] == "Mexican"):
+				onBreakfast = False
+				onLunch = True
+				onDinner = True
+
+		if(onBreakfast):
+			breakfast.append(item)
+		if(onLunch):
+			lunch.append(item)
+		if(onDinner):
+			dinner.append(item)
+	mealdata['breakfast'] = breakfast
+	mealdata['lunch'] = lunch
+	mealdata['dinner'] = dinner
 	return mealdata
