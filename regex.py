@@ -33,7 +33,7 @@ def bcafeGetItems(regexdata):
 				regex2data.append(item)
 	return regex2data
 
-print bcafeGetItems(bcafeGetData("http://menu.ha.ucla.edu/foodpro/bruincafe.asp"))
+#print bcafeGetItems(bcafeGetData("http://menu.ha.ucla.edu/foodpro/bruincafe.asp"))
 
 def seperateMeals(url):
 	response = urllib2.urlopen(url)
