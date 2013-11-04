@@ -136,8 +136,8 @@ def parseMeal(mealData):	#parse the meal grids into readable data
 				s.pop()
 				s.pop()
 				s.pop()
-				s.insert(0, "{ \"title\": ")
-				s.append("}")
+				s.insert(0, "{\"title\":\"")
+				s.append("\"}")
 				r = "".join(s)
 				finalList.append(r)
 			
