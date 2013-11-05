@@ -49,6 +49,12 @@ def parseMenu(menuData):
 				matchItem = re.sub("<.*?>", "", matchItem)
 				matchItem = re.sub("&nbsp;", "", matchItem)
 				finalList.append(matchItem)
+	
+	for item in finalList:
+		item = re.sub('\xe9', '\xc3\xa9', item)
+		item = re.sub('\xae', '\xc2\xae', item)
+		item = unicode(item, "utf-8")
+
 	return finalList
 	
 		
