@@ -1,6 +1,8 @@
 import re
 import urllib2
 import sys
+import scrape
+
 
 def bcafeGetData(url):
 	response = urllib2.urlopen(url)
@@ -33,6 +35,19 @@ def bcafeGetItems(regexdata):
 				regex2data.append(item)
 	return regex2data
 
+def nineteen(url):
+	import cafe1919
+	data = {}
+	listOfItems = cafe1919.scrape1919(url)
+	for item in listOfItems: #we're getting some encoding errors so lets do this
+		item
+	data['breakfast'] = listOfItems
+	data['lunch'] = listOfItems
+	data['dinner'] = listOfItems
+	data['latenight'] = listOfItems
+	return data
+
+#print nineteen("http://menu.ha.ucla.edu/foodpro/cafe1919.asp")
 #print bcafeGetItems(bcafeGetData("http://menu.ha.ucla.edu/foodpro/bruincafe.asp"))
 
 def seperateMeals(url):
@@ -79,7 +94,7 @@ def seperateMeals(url):
 		allmeals['breakfast'] = breakfastGrids
 		allmeals['lunch'] = lunchGrids
 		allmeals['dinner'] = dinnerGrids
-
+	allmeals['latenight'] = []
 	return allmeals
 	
 	
@@ -149,5 +164,8 @@ def returnMealData(url):
 	mealData['breakfast'] = parseMeal(mealDataWTags['breakfast'])
 	mealData['lunch'] = parseMeal(mealDataWTags['lunch'])
 	mealData['dinner'] = parseMeal(mealDataWTags['dinner'])
+	if "http://menu.ha.ucla.edu/foodpro/default.asp?location=01" == url:
+		mealData['latenight'] = scrape.late("http://menu.ha.ucla.edu/foodpro/denevelatenight.asp")
+	else:
+		mealData['latenight'] = []
 	return mealData
-

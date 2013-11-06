@@ -24,33 +24,70 @@ def scrape1919(url):
 		for item in menu:
 			menuAsList.append(item)
 
-	#parse the meals into readable data
-	def parseMenu(menuData):
-		finalList = []
-		for item in menuData:
-			rawItemP = re.compile("t=\"(.*?)\" />|beverageheader\">(.*?)</span>|\">(.*?)</a>", re.S)
-			rawItemListOfMatches = rawItemP.findall(item)
-			#add "title" tag and clean things up a bit
-			for match in rawItemListOfMatches:
-				#match[0] == main titles
-				#match[1] == sub titles
-				#match[2] == items
-				if(match[0] != ""):
-					editableMatchItem = list(match[0])
-					editableMatchItem.insert(0, "{\"title\":\"")
-					editableMatchItem.append("\"}")
-					finalList.append("".join(editableMatchItem))
-				elif(match[1] != ""):
-					editableMatchItem = list(match[1])
-					editableMatchItem.insert(0, "{\"title\":\"")
-					editableMatchItem.append("\"}")
-					finalList.append("".join(editableMatchItem))
-				else:
-					matchItem = match[2]
-					matchItem = re.sub("<.*?>", "", matchItem)
-					matchItem = re.sub("&nbsp;", "", matchItem)
-					finalList.append(matchItem)
-		return finalList
+<<<<<<< HEAD
+#parse the meals into readable data
+def parseMenu(menuData):
+	finalList = []
+	for item in menuData:
+		rawItemP = re.compile("t=\"(.*?)\" />|beverageheader\">(.*?)</span>|\">(.*?)</a>", re.S)
+		rawItemListOfMatches = rawItemP.findall(item)
+		#add "title" tag and clean things up a bit
+		for match in rawItemListOfMatches:
+			#match[0] == main titles
+			#match[1] == sub titles
+			#match[2] == items
+			if(match[0] != ""):
+				editableMatchItem = list(match[0])
+				editableMatchItem.insert(0, "{\"title\":\"")
+				editableMatchItem.append("\"}")
+				finalList.append("".join(editableMatchItem))
+			elif(match[1] != ""):
+				editableMatchItem = list(match[1])
+				editableMatchItem.insert(0, "{\"title\":\"")
+				editableMatchItem.append("\"}")
+				finalList.append("".join(editableMatchItem))
+			else:
+				matchItem = match[2]
+				matchItem = re.sub("<.*?>", "", matchItem)
+				matchItem = re.sub("&nbsp;", "", matchItem)
+				finalList.append(matchItem)
+	return finalList
+=======
+#parse the meals into readable data
+def parseMenu(menuData):
+	finalList = []
+	for item in menuData:
+		rawItemP = re.compile("t=\"(.*?)\" />|beverageheader\">(.*?)</span>|\">(.*?)</a>", re.S)
+		rawItemListOfMatches = rawItemP.findall(item)
+		#add "title" tag and clean things up a bit
+		for match in rawItemListOfMatches:
+			#match[0] == main titles
+			#match[1] == sub titles
+			#match[2] == items
+			if(match[0] != ""):
+				editableMatchItem = list(match[0])
+				editableMatchItem.insert(0, "{\"title\":\"")
+				editableMatchItem.append("\"}")
+				finalList.append("".join(editableMatchItem))
+			elif(match[1] != ""):
+				editableMatchItem = list(match[1])
+				editableMatchItem.insert(0, "{\"title\":\"")
+				editableMatchItem.append("\"}")
+				finalList.append("".join(editableMatchItem))
+			else:
+				matchItem = match[2]
+				matchItem = re.sub("<.*?>", "", matchItem)
+				matchItem = re.sub("&nbsp;", "", matchItem)
+				finalList.append(matchItem)
+	
+	for item in finalList:
+		item = re.sub('\xe9', '\xc3\xa9', item)
+		item = re.sub('\xae', '\xc2\xae', item)
+		item = unicode(item, "utf-8")
+
+	return finalList
+	
+>>>>>>> 9448e91609b5a7f7a23a240dd033a85c4e39cbc9
 		
 			
 	menuAsList = parseMenu(menuAsList)

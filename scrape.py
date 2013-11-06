@@ -81,6 +81,43 @@ def bcafe(url):
 			mealdata.append({"title" : item.get_text()})
 		for item in group.find_all("a", { "class" : "itemlink" }):
 			mealdata.append(item.get_text())
+	data = sortbcafe(mealdata)
+	return data
+
+def sortbcafe(data):
+	mealdata = {}
+	onBreakfast = True;
+	onLunch = False;
+	onDinner = False;
+	spaghetti = False #omigod this is terrible, but we need to know after Lunch on the Go stops
+	breakfast = []
+	lunch = []
+	dinner = []
+	for item in data:
+		try:
+			item['title']
+		except TypeError:
+			pass
+		else:
+			if(onLunch and spaghetti):
+				onBreakfast = False
+				onLunch = True
+				onDinner = True
+			if(item['title'] == "Lunch on the Go"):
+				onBreakfast = False
+				onLunch = True
+				onDinner = False
+				spaghetti = True
+		if(onBreakfast):
+			breakfast.append(item)
+		if(onLunch):
+			lunch.append(item)
+		if(onDinner and spaghetti):
+			dinner.append(item)
+	mealdata['breakfast'] = breakfast
+	mealdata['lunch'] = lunch
+	mealdata['dinner'] = dinner
+	mealdata['latenight'] = dinner
 	return mealdata
 
 def late(url):
@@ -107,6 +144,42 @@ def nineteen(url):
 		section = soup.find("div", { "id" : sectionid })
 		for item in section.find_all("a", { "class" : "itemlink" }):
 			mealdata.append(item.get_text())
+	data = sortnineteen(mealdata)
+	return data
+
+def sortnineteen(data):
+	mealdata = {}
+	onBreakfast = False;
+	onLunch = True;
+	onDinner = True;
+	breakfast = []
+	lunch = []
+	dinner = []
+	for item in data:
+		try:
+			item['title']
+		except TypeError:
+			pass
+		else:
+			if(item['title'] == "Lasagna"):
+				onBreakfast = False
+				onLunch = False
+				onDinner = True
+			if(item['title'] == "Sides"):
+				onBreakfast = False
+				onLunch = True
+				onDinner = True
+
+		if(onBreakfast):
+			breakfast.append(item)
+		if(onLunch):
+			lunch.append(item)
+		if(onDinner):
+			dinner.append(item)
+	mealdata['breakfast'] = []
+	mealdata['lunch'] = lunch
+	mealdata['dinner'] = dinner
+	mealdata['latenight'] = dinner
 	return mealdata
 
 def rende(url):
@@ -127,7 +200,7 @@ def rende(url):
 				mealdata.append({ "title" : "Beverages"})
 			if item.get_text():
 				mealdata.append(item.get_text())
-	truemealdata = sortrende(mealdata)
+	truemealdata = sortrende(mealdata) #look we be sorting it
 	return truemealdata
 
 def sortrende(rendedata):
@@ -158,4 +231,6 @@ def sortrende(rendedata):
 	mealdata['breakfast'] = breakfast
 	mealdata['lunch'] = lunch
 	mealdata['dinner'] = dinner
+	mealdata['latenight'] = dinner
 	return mealdata
+
