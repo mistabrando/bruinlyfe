@@ -1,7 +1,7 @@
 bruinlyfe
 =========
+Built with Chris Konstad http://github.com/chriskonstad
 
-Python scraper for UCLA menus and stuff
+Python scraper for UCLA menus 
 
-Bcafe is still being worked on atm
-
+View the source of what is powers: https://github.com/chriskonstad/BruinLyfe-Java
