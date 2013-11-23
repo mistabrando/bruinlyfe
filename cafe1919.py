@@ -24,6 +24,9 @@ def scrape1919(url):
 		for item in menu:
 			menuAsList.append(item)
 
+	menuAsList = parseMenu(menuAsList)
+	return menuAsList
+
 #parse the meals into readable data
 def parseMenu(menuData):
 	finalList = []
@@ -51,12 +54,18 @@ def parseMenu(menuData):
 				matchItem = re.sub("&nbsp;", "", matchItem)
 				finalList.append(matchItem)
 	
-	for item in finalList:
+	for item in finalList: # we be cleaning
 		item = re.sub('\xe9', '\xc3\xa9', item)
 		item = re.sub('\xae', '\xc2\xae', item)
 		item = unicode(item, "utf-8")
 
 	return finalList		
-			
-	menuAsList = parseMenu(menuAsList)
-	return menuAsList
+
+def nineteen(url): # this puts the stuff from scrape1919 into lunch dinner and latenight and leaves breakfast empty
+	scrapeddata = scrape1919(url)
+	nineteendata = {}
+	nineteendata['breakfast'] = []
+	nineteendata['lunch'] = scrapeddata
+	nineteendata['dinner'] = scrapeddata
+	nineteendata['latenight'] = scrapeddata
+	return nineteendata

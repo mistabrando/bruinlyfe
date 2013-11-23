@@ -68,8 +68,10 @@ def twomeals(url):
 		for item in group.find_all("a", { "class" : "itemlink" }):
 		    dinner.append(item.get_text())	
 	
+	mealdata['breakfast'] = []
 	mealdata['lunch'] = lunch
 	mealdata['dinner'] = dinner
+	mealdata['latenight'] = []
 	return mealdata
 
 def bcafe(url):
@@ -114,6 +116,11 @@ def sortbcafe(data):
 			lunch.append(item)
 		if(onDinner and spaghetti):
 			dinner.append(item)
+	#special little bit of code here to move the soup, patch fix until we regex to work...
+	kosher = lunch.pop(56)
+	lunch.insert(66, kosher)
+	kosher = dinner.pop(32)
+	dinner.insert(42, kosher)
 	mealdata['breakfast'] = breakfast
 	mealdata['lunch'] = lunch
 	mealdata['dinner'] = dinner
@@ -234,3 +241,11 @@ def sortrende(rendedata):
 	mealdata['latenight'] = dinner
 	return mealdata
 
+#----LOLLLLL------
+def hedrick():
+	mealData = {}
+	mealData['breakfast'] = ["We wish we knew, but there's no data online so :("]
+	mealData['lunch'] = ["We wish we knew, but there's no data online so :("]
+	mealData['dinner'] = ["We wish we knew, but there's no data online so :("]
+	mealData['latenight'] = ["We wish we knew, but there's no data online so :("]
+	return mealData

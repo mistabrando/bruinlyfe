@@ -3,17 +3,6 @@ import urllib2
 import sys
 import scrape
 
-
-def bcafeGetData(url):
-	response = urllib2.urlopen(url)
-	page_source = response.read()
-	regex = re.compile("<td class=\"layouttablecell\">(.*?)</td>", re.S) #regex1 is used to isolate items from the source, including gibberish that surrounds it
-	regexdata = regex.findall(page_source) #first we do meal items, we need a different regex for drinks
-	regex = re.compile("<td class=\"layouttablecell_full\">(.*?)</table>", re.S) #for drinks here
-	regexdata = regexdata + regex.findall(page_source)
-	return regexdata
-
-
 def bcafeGetItems(regexdata):
 	regex = re.compile(";\">(.*?)<", re.S) #for items
 	regex2 = re.compile("<h1>(.*?)</h1>", re.S) #for titles
@@ -34,6 +23,53 @@ def bcafeGetItems(regexdata):
 			for item in items:
 				regex2data.append(item)
 	return regex2data
+
+def sortbcafe(data):
+	mealdata = {}
+	onBreakfast = True;
+	onLunch = False;
+	onDinner = False;
+	spaghetti = False #omigod this is terrible, but we need to know after Lunch on the Go stops
+	breakfast = []
+	lunch = []
+	dinner = []
+	for item in data:
+		try:
+			item['title']
+		except TypeError:
+			pass
+		else:
+			if(onLunch and spaghetti):
+				onBreakfast = False
+				onLunch = True
+				onDinner = True
+			if(item['title'] == "Lunch on the Go"):
+				onBreakfast = False
+				onLunch = True
+				onDinner = False
+				spaghetti = True
+		if(onBreakfast):
+			breakfast.append(item)
+		if(onLunch):
+			lunch.append(item)
+		if(onDinner and spaghetti):
+			dinner.append(item)
+	mealdata['breakfast'] = breakfast
+	mealdata['lunch'] = lunch
+	mealdata['dinner'] = dinner
+	mealdata['latenight'] = dinner
+	return mealdata
+
+def bcafeGetData(url):
+	response = urllib2.urlopen(url)
+	page_source = response.read()
+	regex = re.compile("<td class=\"layouttablecell\">(.*?)</td>", re.S) #regex1 is used to isolate items from the source, including gibberish that surrounds it
+	regexdata = regex.findall(page_source) #first we do meal items, we need a different regex for drinks
+	regex = re.compile("<td class=\"layouttablecell_full\">(.*?)</table>", re.S) #for drinks here
+	regexdata = regexdata + regex.findall(page_source) #source
+	regex2data = bcafeGetItems(regexdata) #seperated into items
+	finaldata = sortbcafe(regex2data) #items put into meal periods
+	return finaldata
 
 def nineteen(url):
 	import cafe1919
@@ -155,7 +191,13 @@ def parseMeal(mealData):	#parse the meal grids into readable data
 				s.append("\"}")
 				r = "".join(s)
 				finalList.append(r)
-			
+	
+	for item in finalList: #get rid of unicode errors
+		item = re.sub('\xfbl', '1', item)
+		item = re.sub('\xe9', '\xc3\xa9', item)
+		item = re.sub('\xae', '\xc2\xae', item)
+		item = unicode(item, "utf-8")
+	
 	return finalList
 
 def returnMealData(url):
@@ -169,3 +211,4 @@ def returnMealData(url):
 	else:
 		mealData['latenight'] = []
 	return mealData
+
